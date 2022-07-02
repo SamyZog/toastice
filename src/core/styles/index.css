@@ -1,0 +1,283 @@
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .Toastice__list {
+    @apply grid;
+    @apply fixed;
+    @apply z-[9999];
+    @apply box-border;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+      "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &--top-left {
+      &-normal {
+        @apply top-2;
+        @apply left-4;
+      }
+
+      &-dense {
+        @apply top-0;
+        @apply left-2;
+      }
+    }
+
+    &--top-center {
+      &-normal {
+        @apply top-2;
+      }
+
+      &-dense {
+        @apply top-0;
+      }
+
+      &-compact {
+        @apply top-0;
+        @apply w-[95vw];
+      }
+    }
+
+    &--top-right {
+      &-normal {
+        @apply top-2;
+        @apply right-4;
+      }
+
+      &-dense {
+        @apply top-0;
+        @apply right-2;
+      }
+    }
+
+    &--bottom-left {
+      &-normal {
+        @apply bottom-4;
+        @apply left-4;
+      }
+
+      &-dense {
+        @apply bottom-2;
+        @apply left-2;
+      }
+    }
+
+    &--bottom-center {
+      &-normal {
+        @apply bottom-4;
+      }
+
+      &-dense {
+        @apply bottom-2;
+      }
+
+      &-compact {
+        @apply bottom-0;
+        @apply w-[95vw];
+      }
+    }
+
+    &--bottom-right {
+      &-normal {
+        @apply bottom-4;
+        @apply right-4;
+      }
+
+      &-dense {
+        @apply bottom-2;
+        @apply right-2;
+      }
+    }
+
+    .Toastice__toast {
+      @apply min-h-[64px];
+      @apply min-w-[256px];
+      @apply rounded-md;
+      @apply overflow-hidden;
+      @apply relative;
+      @apply invisible;
+      @apply will-change-transform;
+      @apply my-2;
+
+      &--close-on-click {
+        @apply cursor-pointer;
+      }
+
+      &--elevated {
+        @apply shadow-md;
+      }
+
+      &--filled {
+        &-default {
+          @apply bg-slate-300;
+          @apply text-slate-700;
+        }
+
+        &-success {
+          @apply bg-green-300;
+          @apply text-green-700;
+        }
+
+        &-warning {
+          @apply bg-yellow-300;
+          @apply text-yellow-700;
+        }
+
+        &-error {
+          @apply bg-red-300;
+          @apply text-red-700;
+        }
+
+        &-info {
+          @apply bg-blue-300;
+          @apply text-blue-700;
+        }
+      }
+
+      &--outlined {
+        @apply border-2;
+        @apply border-current;
+        @apply border-solid;
+
+        &-default {
+          @apply bg-slate-200;
+          @apply text-slate-600;
+        }
+
+        &-success {
+          @apply bg-green-200;
+          @apply text-green-600;
+        }
+
+        &-warning {
+          @apply bg-yellow-200;
+          @apply text-yellow-600;
+        }
+
+        &-error {
+          @apply bg-red-200;
+          @apply text-red-600;
+        }
+
+        &-info {
+          @apply bg-blue-200;
+          @apply text-blue-600;
+        }
+      }
+
+      &--glass {
+        backdrop-filter: blur(4px);
+        @apply border border-solid border-slate-50 border-opacity-10;
+
+        &-default {
+          @apply bg-slate-600/60;
+          @apply text-slate-200;
+        }
+
+        &-success {
+          @apply bg-green-600/60;
+          @apply text-slate-200;
+        }
+
+        &-warning {
+          @apply bg-amber-600/60;
+          @apply text-slate-200;
+        }
+
+        &-error {
+          @apply bg-red-600/60;
+          @apply text-slate-200;
+        }
+
+        &-info {
+          @apply bg-blue-600/60;
+          @apply text-slate-200;
+        }
+      }
+
+      &--compact {
+        @apply w-full;
+        @apply my-0;
+        @apply rounded-none;
+        @apply shadow-none;
+      }
+    }
+
+    .Toastice__toast__content-box {
+      @apply flex;
+      @apply justify-between;
+      @apply items-center;
+      @apply [min-height:inherit];
+      @apply space-x-3;
+      @apply px-2;
+    }
+
+    .Toastice__toast__content {
+      @apply truncate;
+      @apply flex-1;
+    }
+
+    .Toastice__toast__close-button {
+      @apply p-0;
+      @apply h-4;
+      @apply w-4;
+      @apply flex;
+      @apply justify-center;
+      @apply items-center;
+      @apply text-inherit;
+      @apply bg-transparent;
+      @apply border-none;
+      @apply cursor-pointer;
+      @apply overflow-hidden;
+
+      .Toastice__toast__icon {
+        @apply h-4;
+        @apply w-4;
+
+        &--close {
+          @apply text-inherit;
+        }
+      }
+    }
+
+    .Toastice__toast__icon {
+      @apply fill-current;
+
+      &--success {
+      }
+
+      &--warning {
+      }
+
+      &--error {
+      }
+
+      &--info {
+      }
+    }
+
+    .Toastice__toast__progress-bar {
+      @apply bg-current;
+      @apply h-1;
+      @apply w-full;
+
+      &--success {
+      }
+
+      &--warning {
+      }
+
+      &--error {
+      }
+
+      &--info {
+      }
+    }
+  }
+}

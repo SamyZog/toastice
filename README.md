@@ -1,2 +1,3 @@
-# toastice
+# Toastice
+
 Simple React Toasts 🍞
