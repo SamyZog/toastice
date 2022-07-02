@@ -1,6 +1,6 @@
 {
-  "name": "toastice-working-demo",
-  "version": "1.0.6",
+  "name": "toastice",
+  "version": "1.0.0",
   "description": "Simple React Toasts 🍞",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
