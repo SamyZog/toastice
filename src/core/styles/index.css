@@ -30,8 +30,8 @@
     }
 
     &--top-center {
-      @apply left-1/2;
-      @apply -translate-x-1/2;
+      left: 50%;
+      transform: translateX(-50%);
 
       &-normal {
         @apply top-2;
@@ -72,8 +72,8 @@
     }
 
     &--bottom-center {
-      @apply left-1/2;
-      @apply -translate-x-1/2;
+      left: 50%;
+      transform: translateX(-50%);
 
       &-normal {
         @apply bottom-4;
