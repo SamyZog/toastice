@@ -30,6 +30,9 @@
     }
 
     &--top-center {
+      @apply left-1/2;
+      @apply -translate-x-1/2;
+
       &-normal {
         @apply top-2;
       }
@@ -69,6 +72,9 @@
     }
 
     &--bottom-center {
+      @apply left-1/2;
+      @apply -translate-x-1/2;
+
       &-normal {
         @apply bottom-4;
       }
