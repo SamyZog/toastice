@@ -110,6 +110,8 @@
       @apply invisible;
       @apply will-change-transform;
       @apply my-2;
+      @apply transition-colors;
+      @apply duration-300;
 
       &--close-on-click {
         @apply cursor-pointer;
@@ -272,6 +274,9 @@
       @apply bg-current;
       @apply h-1;
       @apply w-full;
+      @apply bottom-0;
+      @apply left-0;
+      @apply absolute;
 
       &--success {
       }

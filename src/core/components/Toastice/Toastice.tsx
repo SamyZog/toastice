@@ -12,7 +12,6 @@ import Collapse from "../Collapse";
 import { emit, subscribe } from "../../utils/eventManager";
 import {
   animateTo,
-  animationOptions,
   keyframes,
 } from "../../utils/animations";
 
@@ -41,73 +40,77 @@ const Toastice = (props: ToasticePropsWithContent) => {
   const toasticeRef = React.useRef<HTMLDivElement>(null);
   const progressBarRef = React.useRef<HTMLDivElement>(null);
   const progressControls = React.useRef<PlaybackControls>();
-  const progressRate = React.useRef<number>(1);
+  const progressRate = React.useRef<number>(0);
   const startAnimation = React.useRef<Animation>();
   const endAnimation = React.useRef<Animation>();
 
   const playEndAnimation = React.useCallback(() => {
-    progressControls.current?.stop();
-
-    if (endAnimation.current?.playState === "running") return;
-
-    if (toasticeRef.current && animation && position) {
+    if (toasticeRef.current && position && animation) {
       endAnimation.current = animateTo(
         toasticeRef.current,
         keyframes[animation === "slide" ? position : animation].out,
-        animationOptions.out,
+        "out",
         () => setCollapsed(true),
       );
     }
   }, [animation, position]);
 
   const pauseProgressAnimation = React.useCallback(() => {
-    if (!autoClose) return;
-
     if (progressControls.current) {
       progressControls.current.stop();
     }
-  }, [autoClose]);
-
-  const updateProgressAnimation = React.useCallback((value: number) => {
-    progressRate.current = value;
-
-    onProgress?.(Math.round(value * 100));
-
-    if (progressBarRef.current) {
-      progressBarRef.current.style.transform = `scaleX(${value})`;
-    }
-  }, [onProgress]);
+  }, []);
 
   const startProgress = React.useCallback(() => {
     if (typeof autoClose !== "number") return;
 
+    progressControls.current?.stop();
+
     progressControls.current = animate({
       from: progressRate.current,
       to: 0,
-      duration: progressRate.current ? progressRate.current * autoClose : autoClose,
+      duration: progressRate.current ? autoClose * progressRate.current : autoClose,
+      elapsed: -300,
       ease: linear,
-      elapsed: -200,
-      onComplete: playEndAnimation,
-      onUpdate: updateProgressAnimation,
+      onUpdate: (value) => {
+        onProgress?.(Math.round(value * 100));
+
+        progressRate.current = value;
+
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${value})`;
+        }
+      },
+      onComplete: () => { playEndAnimation(); },
     });
-  }, [autoClose, playEndAnimation, updateProgressAnimation]);
+  }, [autoClose, onProgress, playEndAnimation]);
 
   const resumeProgressAnimation = React.useCallback(() => {
     startProgress();
   }, [startProgress]);
 
-  const beginAnimationSequence = React.useCallback(() => {
-    if (startAnimation.current?.playState === "running") return;
+  React.useEffect(() => {
+    if (autoClose) {
+      progressRate.current = 1;
 
-    if (toasticeRef.current && animation && position) {
+      startProgress();
+    }
+
+    return () => {
+      pauseProgressAnimation();
+    };
+  }, [autoClose, pauseProgressAnimation, props, startProgress]);
+
+  const beginAnimationSequence = React.useCallback(() => {
+    if (toasticeRef.current && position && animation) {
       startAnimation.current = animateTo(
         toasticeRef.current,
         keyframes[animation === "slide" ? position : animation].in,
-        animationOptions.in,
-        () => { if (autoClose) startProgress(); },
+        "in",
+        startProgress,
       );
     }
-  }, [animation, autoClose, position, startProgress]);
+  }, [animation, position, startProgress]);
 
   const closeToastice = () => {
     if (collapsed) {
@@ -130,21 +133,12 @@ const Toastice = (props: ToasticePropsWithContent) => {
     });
 
     return () => {
+      unsubscribeAnimateOut();
+      progressControls.current?.stop();
       startAnimation.current?.cancel();
       endAnimation.current?.cancel();
-      progressControls.current?.stop();
-      unsubscribeAnimateOut();
     };
   }, []);
-
-  React.useEffect(() => {
-    if (progressControls.current) {
-      progressControls.current.stop();
-      progressRate.current = 1;
-
-      startProgress();
-    }
-  }, [props, startProgress]);
 
   const toasticeClass = clsx(
     "Toastice__toast",
@@ -167,8 +161,8 @@ const Toastice = (props: ToasticePropsWithContent) => {
     >
       <div
         {...(closeOnClick ? { onClick: playEndAnimation } : {})}
-        onMouseEnter={pauseOnHover ? pauseProgressAnimation : undefined}
-        onMouseLeave={pauseOnHover ? resumeProgressAnimation : undefined}
+        onMouseEnter={pauseOnHover && autoClose ? pauseProgressAnimation : undefined}
+        onMouseLeave={pauseOnHover && autoClose ? resumeProgressAnimation : undefined}
         ref={toasticeRef}
         className={toasticeClass}
       >

@@ -2,27 +2,42 @@ import * as React from "react";
 import ToasticeContainer from "./core/components/ToasticeContainer";
 import toast from "./core/utils/toast";
 
+// Testing playground
 const App = () => {
+  const id = React.useRef<number | string>();
+
   const show = () => {
-    toast("Hello World", {
+    id.current = toast("Hello World", {
+      type: "error",
       position: "bottom-center",
+      autoClose: 2000,
+      delay: 1000,
+    });
+  };
+
+  const update = () => {
+    toast.update(id.current, {
+      type: "warning",
       autoClose: false,
     });
   };
 
+  const updateAgain = () => {
+    toast.update(id.current, {
+      type: "success",
+      autoClose: 2000,
+    });
+  };
+
   return (
-    <>
-      <div className="h-24 bg-slate-900" />
-      <div className="h-24 bg-slate-600" />
-      <div className="h-24 bg-slate-300" />
-      <div className="flex justify-center items-center h-screen">
-        <button type="button" onClick={show}>
-          show
-        </button>
-        <button type="button">update</button>
-        <ToasticeContainer limit={false} />
-      </div>
-    </>
+    <div className="flex justify-center items-center h-screen">
+      <button type="button" onClick={show}>
+        show
+      </button>
+      <button type="button" onClick={update}>update</button>
+      <button type="button" onClick={updateAgain}>update again</button>
+      <ToasticeContainer limit={false} />
+    </div>
   );
 };
 
