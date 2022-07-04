@@ -4,23 +4,6 @@ import {
   ToasticeAnimationOptions,
 } from "./animations.types";
 
-const animateTo: AnimateTo = (node, keyframes, options, onFinish) => {
-  const animation = node.animate(
-    keyframes,
-    options,
-  );
-
-  if (typeof onFinish === "function") {
-    animation.addEventListener("finish", (ev) => {
-      onFinish(ev);
-      animation.commitStyles();
-      animation.cancel();
-    });
-  }
-
-  return animation;
-};
-
 const animationOptions: ToasticeAnimationOptions = {
   in: {
     duration: 200,
@@ -33,6 +16,23 @@ const animationOptions: ToasticeAnimationOptions = {
     fill: "forwards",
     easing: "ease-out",
   },
+};
+
+const animateTo: AnimateTo = (node, keyframes, options, onFinish) => {
+  const animation = node.animate(
+    keyframes,
+    animationOptions[options || "in"],
+  );
+
+  if (typeof onFinish === "function") {
+    animation.addEventListener("finish", (ev) => {
+      onFinish(ev);
+      animation.commitStyles();
+      animation.cancel();
+    });
+  }
+
+  return animation;
 };
 
 const keyframes: ToasticeAnimationKeyframes = {
@@ -130,8 +130,4 @@ const keyframes: ToasticeAnimationKeyframes = {
 
 };
 
-export {
-  keyframes,
-  animationOptions,
-  animateTo,
-};
+export { keyframes, animateTo };

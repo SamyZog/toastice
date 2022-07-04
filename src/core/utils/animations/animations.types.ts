@@ -15,6 +15,6 @@ export type ToasticeAnimationKeyframes = Record<AnimationTypes, {
 export type AnimateTo = (
   node: HTMLElement,
   keframes: PropertyIndexedKeyframes | Keyframe[] | null,
-  options?: number | KeyframeAnimationOptions,
+  options?: "in" | "out",
   onFinish?: (ev: AnimationPlaybackEvent) => void
 ) => Animation;
