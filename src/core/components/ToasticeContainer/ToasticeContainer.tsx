@@ -15,7 +15,7 @@ const ToasticeContainer = ({
   margin,
   position,
   limit,
-  compact,
+  fullWidth,
   ...props
 }: ToasticeContainerProps) => {
   const [toastices, setToastices] = React.useState<ToasticeListProps>([]);
@@ -30,7 +30,7 @@ const ToasticeContainer = ({
     const showToastice: Show = (settings) => {
       let correctPosition = settings.position || position;
 
-      if (compact) {
+      if (fullWidth) {
         if (correctPosition === "top-left" || correctPosition === "top-right") {
           correctPosition = "top-center";
         } else if (correctPosition === "bottom-left" || correctPosition === "bottom-right") {
@@ -44,7 +44,7 @@ const ToasticeContainer = ({
         ...props,
         ...settings,
         position: correctPosition,
-        compact,
+        fullWidth,
       };
 
       setTimeout(() => {
@@ -119,7 +119,7 @@ const ToasticeContainer = ({
       unsubscribeClear();
       unsubscribeQueue();
     };
-  }, [compact, limit, margin, newestOnTop, position, props]);
+  }, [fullWidth, limit, margin, newestOnTop, position, props]);
 
   return (
     <>
@@ -127,37 +127,37 @@ const ToasticeContainer = ({
         toastices={toastices}
         margin={margin}
         position="top-left"
-        compact={compact}
+        fullWidth={fullWidth}
       />
       <ToasticeList
         toastices={toastices}
         margin={margin}
         position="top-center"
-        compact={compact}
+        fullWidth={fullWidth}
       />
       <ToasticeList
         toastices={toastices}
         margin={margin}
         position="top-right"
-        compact={compact}
+        fullWidth={fullWidth}
       />
       <ToasticeList
         toastices={toastices}
         margin={margin}
         position="bottom-left"
-        compact={compact}
+        fullWidth={fullWidth}
       />
       <ToasticeList
         toastices={toastices}
         margin={margin}
         position="bottom-center"
-        compact={compact}
+        fullWidth={fullWidth}
       />
       <ToasticeList
         toastices={toastices}
         margin={margin}
         position="bottom-right"
-        compact={compact}
+        fullWidth={fullWidth}
       />
     </>
   );

@@ -41,9 +41,11 @@
         @apply top-0;
       }
 
-      &-compact {
+      &-fullWidth {
         @apply top-0;
-        @apply w-[95vw];
+        @apply left-0;
+        @apply w-screen;
+        @apply translate-x-0;
       }
     }
 
@@ -83,9 +85,11 @@
         @apply bottom-2;
       }
 
-      &-compact {
+      &-fullWidth {
+        @apply left-0;
         @apply bottom-0;
-        @apply w-[95vw];
+        @apply w-screen;
+        @apply translate-x-0;
       }
     }
 
@@ -209,7 +213,7 @@
         }
       }
 
-      &--compact {
+      &--fullWidth {
         @apply w-full;
         @apply my-0;
         @apply rounded-none;
