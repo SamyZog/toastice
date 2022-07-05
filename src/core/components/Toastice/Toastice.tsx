@@ -33,9 +33,12 @@ const Toastice = (props: ToasticePropsWithContent) => {
     onClose,
     onOpen,
     onProgress,
-    compact,
+    fullWidth,
   } = props;
+
   const [collapsed, setCollapsed] = React.useState(true);
+
+  const [customToasticeProgress, setCustomToasticeProgress] = React.useState(0);
 
   const toasticeRef = React.useRef<HTMLDivElement>(null);
   const progressBarRef = React.useRef<HTMLDivElement>(null);
@@ -44,7 +47,11 @@ const Toastice = (props: ToasticePropsWithContent) => {
   const startAnimation = React.useRef<Animation>();
   const endAnimation = React.useRef<Animation>();
 
+  const isCustomContent = typeof content === "function";
+
   const playEndAnimation = React.useCallback(() => {
+    if (endAnimation.current?.playState === "running") return;
+
     if (toasticeRef.current && position && animation) {
       endAnimation.current = animateTo(
         toasticeRef.current,
@@ -73,7 +80,11 @@ const Toastice = (props: ToasticePropsWithContent) => {
       elapsed: -300,
       ease: linear,
       onUpdate: (value) => {
-        onProgress?.(Math.round(value * 100));
+        const roundedValue = Math.round(value * 100);
+
+        if (isCustomContent) setCustomToasticeProgress(roundedValue);
+
+        onProgress?.(roundedValue);
 
         progressRate.current = value;
 
@@ -83,7 +94,7 @@ const Toastice = (props: ToasticePropsWithContent) => {
       },
       onComplete: () => { playEndAnimation(); },
     });
-  }, [autoClose, onProgress, playEndAnimation]);
+  }, [autoClose, isCustomContent, onProgress, playEndAnimation]);
 
   const resumeProgressAnimation = React.useCallback(() => {
     startProgress();
@@ -138,6 +149,7 @@ const Toastice = (props: ToasticePropsWithContent) => {
       startAnimation.current?.cancel();
       endAnimation.current?.cancel();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toasticeClass = clsx(
@@ -146,7 +158,7 @@ const Toastice = (props: ToasticePropsWithContent) => {
     elevated && "Toastice__toast--elevated",
     [`Toastice__toast--${theme}`],
     [`Toastice__toast--${theme}-${type}`],
-    compact && "Toastice__toast--compact",
+    fullWidth && "Toastice__toast--fullWidth",
   );
 
   const progressBarClass = clsx(
@@ -154,27 +166,55 @@ const Toastice = (props: ToasticePropsWithContent) => {
     [`Toastice__toast__progress-bar--${theme}`],
   );
 
+  const renderedContent = React.useMemo(() => {
+    if (isCustomContent) {
+      return content({
+        ...props,
+        progress: customToasticeProgress,
+        Icon: showIcon ? Icon : undefined,
+        close: () => {
+          progressControls.current?.stop();
+          playEndAnimation();
+        },
+      });
+    }
+
+    return null;
+  }, [content, customToasticeProgress, isCustomContent, playEndAnimation, props, showIcon]);
+
   return (
     <Collapse
       collapsed={collapsed}
       onCollapseEnd={closeToastice}
     >
-      <div
-        {...(closeOnClick ? { onClick: playEndAnimation } : {})}
-        onMouseEnter={pauseOnHover && autoClose ? pauseProgressAnimation : undefined}
-        onMouseLeave={pauseOnHover && autoClose ? resumeProgressAnimation : undefined}
-        ref={toasticeRef}
-        className={toasticeClass}
-      >
-        <div className="Toastice__toast__content-box">
-          {showIcon && <Icon theme={theme} type={type} />}
-          <div role={role} className="Toastice__toast__content">{content}</div>
-          {showCloseButton && <CloseButton onClick={playEndAnimation} />}
+      {isCustomContent ? (
+        <div
+          onMouseEnter={pauseOnHover && autoClose ? pauseProgressAnimation : undefined}
+          onMouseLeave={pauseOnHover && autoClose ? resumeProgressAnimation : undefined}
+          ref={toasticeRef}
+          className="invisible"
+        >
+          {renderedContent}
         </div>
-        {autoClose && (
-        <div ref={progressBarRef} className={progressBarClass} />
-        )}
-      </div>
+      ) : (
+        <div
+          {...(closeOnClick ? { onClick: playEndAnimation } : {})}
+          onMouseEnter={pauseOnHover && autoClose ? pauseProgressAnimation : undefined}
+          onMouseLeave={pauseOnHover && autoClose ? resumeProgressAnimation : undefined}
+          ref={toasticeRef}
+          className={toasticeClass}
+        >
+          <div className="Toastice__toast__content-box">
+            {showIcon && <Icon theme={theme} type={type} />}
+            <div role={role} className="Toastice__toast__content">{content}</div>
+            {showCloseButton && <CloseButton onClick={playEndAnimation} />}
+          </div>
+          {autoClose && (
+            <div ref={progressBarRef} className={progressBarClass} />
+          )}
+        </div>
+      )}
+
     </Collapse>
   );
 };

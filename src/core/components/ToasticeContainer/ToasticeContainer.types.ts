@@ -34,7 +34,7 @@ export type ToasticeContainerProps = {
   limit?: number | false;
   role?: string;
   elevated?: boolean,
-  compact?: boolean,
+  fullWidth?: boolean,
 }
 
 export type ToasticeListProps = ToasticePropsWithContent[];

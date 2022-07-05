@@ -5,5 +5,5 @@ export type ToasticeListProps = {
   position: ToasticeContainerProps["position"];
   margin: ToasticeContainerProps["margin"];
   toastices: ToasticePropsWithContent[];
-  compact?: ToasticeContainerProps["compact"];
+  fullWidth: ToasticeContainerProps["fullWidth"];
 };

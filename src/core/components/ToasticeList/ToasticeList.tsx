@@ -8,7 +8,7 @@ const ToasticeList = ({
   position = "bottom-right",
   margin = "normal",
   toastices = [],
-  compact,
+  fullWidth,
 }: ToasticeListProps) => {
   const toasticeList = useMemo(() => toastices
     .filter((toastice) => toastice.position === position), [position, toastices]);
@@ -17,7 +17,7 @@ const ToasticeList = ({
     "Toastice__list",
     [`Toastice__list--${position}`],
     [`Toastice__list--${position}-${margin}`],
-    compact && `Toastice__list--${position}-compact`,
+    fullWidth && `Toastice__list--${position}-fullWidth`,
   );
 
   if (toasticeList.length === 0) return null;
